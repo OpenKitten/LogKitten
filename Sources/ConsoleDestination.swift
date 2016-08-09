@@ -1,16 +1,12 @@
 import Foundation
 
-public class ConsoleDestination : Destination {
-    public init() {}
+public final class ConsoleDestination : PlaintextDestination {
+    public override init() {
+        super.init()
+        self.transformers = [Colorizer()]
+    }
     
-    public var renderer: PlaintextRenderer = ConfigurableRenderer()
-    public var transformers: [PlaintextTransformer] = [Colorizer()]
-    
-    public func log(_ message: Message) {
-        var renderedMessage = renderer.render(message)
-        for transformer in transformers {
-            renderedMessage = transformer.transform(renderedMessage, context: message)
-        }
-        print(renderedMessage)
+    public override func log(_ message: String) {
+        print(message)
     }
 }

@@ -1,15 +1,15 @@
-import Foundation
+#if os(Linux)
+    import Glibc
+#else
+    import Darwin
+#endif
 
-public class SyslogDestination : Destination {
-    public init() {}
-    
-    public var renderer: PlaintextRenderer = ConfigurableRenderer()
-    
-    public func log(_ message: Message) {
-        let renderedMessage = renderer.render(message)
-        
-        withVaList([]) {
-            vsyslog(0, renderedMessage, $0)
+public final class SyslogDestination : PlaintextDestination {
+    public override func log(_ message: String) {
+        message.withCString { message in
+            withVaList([message]) {
+                vsyslog(0, "%s", $0)
+            }
         }
     }
 }
