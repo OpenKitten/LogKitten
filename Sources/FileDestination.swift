@@ -32,5 +32,5 @@ public final class FileDestination : PlaintextDestination {
         fclose(file)
     }
     
-    var file: UnsafeMutablePointer<FILE>!
+    private var file: UnsafeMutablePointer<FILE>!
 }
