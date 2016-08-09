@@ -33,7 +33,7 @@ public class ConfigurableRenderer : PlaintextRenderer {
         return dfm
     }()
     
-    let format = "[%level] %date %source:%function %message"
+    let format = "%date [%level] %message    [%source:%filename:%function]"
     
     private func render(_ subject: Message.Subject) -> String {
         switch subject {
