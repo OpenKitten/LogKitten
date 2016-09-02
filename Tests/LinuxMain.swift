@@ -1,5 +1,5 @@
 import XCTest
-@testable import LogKittenTestSuite
+@testable import LogKittenTests
 
 XCTMain([
      testCase(LogKittenTests.allTests),

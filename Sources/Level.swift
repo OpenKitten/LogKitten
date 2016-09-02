@@ -50,12 +50,12 @@ public enum Level : CustomStringConvertible, Equatable, Comparable, Hashable {
             return "Fatal"
         }
     }
-}
-
-public func ==(lhs: Level, rhs: Level) -> Bool {
-    return lhs.hashValue == rhs.hashValue
-}
-
-public func <(lhs: Level, rhs: Level) -> Bool {
-    return lhs.compareValue < rhs.compareValue
+    
+    public static func ==(lhs: Level, rhs: Level) -> Bool {
+        return lhs.hashValue == rhs.hashValue
+    }
+    
+    public static func <(lhs: Level, rhs: Level) -> Bool {
+        return lhs.compareValue < rhs.compareValue
+    }
 }
