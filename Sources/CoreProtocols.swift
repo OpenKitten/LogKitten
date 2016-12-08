@@ -26,8 +26,15 @@ public protocol Framework: class {
 
 public protocol SubjectRepresentable {
     func makeSubject() -> Subject
+    static func convertToString(fromData: [UInt8]) -> String
     
     static var name: String { get }
+}
+
+extension SubjectRepresentable {
+    static public func convertToString(fromData: [UInt8]) -> String {
+        return "Unknown"
+    }
 }
 
 extension String: SubjectRepresentable {

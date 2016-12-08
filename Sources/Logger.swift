@@ -13,13 +13,29 @@ public enum LogKittenError: Error {
 }
 
 public class Logger : _Logger {
-    public init() {
+    public init(minimumLogLevel: Int) {
+        self.minimumLevel = minimumLogLevel
+        
         if Logger.componentLogger == nil {
             self.useForComponents = true
         }
     }
     
+    public init(minimumLogLevel: DefaultLevel = .info) {
+        self.minimumLevel = minimumLogLevel.compareValue
+        
+        if Logger.componentLogger == nil {
+            self.useForComponents = true
+        }
+    }
+    
+    var minimumLevel: Int
+    
     public func log<L : Level>(_ message: Message<L>, fromFramework framework: Framework) {
+        guard message.level.compareValue >= minimumLevel else {
+            return
+        }
+        
         for destination in destinations {
             destination.log(message, fromFramework: framework)
         }
@@ -68,5 +84,5 @@ public class Logger : _Logger {
     public class func logger(forComponent identifier: String) -> _Logger {
         fatalError()
     }
-
+    
 }
