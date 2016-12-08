@@ -25,7 +25,10 @@ public protocol Framework: class {
 }
 
 public protocol SubjectRepresentable {
-    func makeSubject() -> Subject
+    // [Framework: Subject]
+    static var logKittenId: [UInt8: UInt8] { get set }
+    
+    func makeSubject(fromFramework: Framework) -> Subject
     static func convertToString(fromData: [UInt8]) -> String
     
     static var name: String { get }
@@ -38,9 +41,12 @@ extension SubjectRepresentable {
 }
 
 extension String: SubjectRepresentable {
-    public func makeSubject() -> Subject {
+    public func makeSubject(fromFramework: Framework) -> Subject {
         return .string(self)
     }
+    
+    // [Framework: Subject]
+    public static var logKittenId = [UInt8: UInt8]()
     
     public static var name: String = "String"
 }

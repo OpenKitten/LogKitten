@@ -10,53 +10,53 @@ import Foundation
 
 extension Framework {
     public func fatal(_ string: String, _ function: String = #function, _ file: String = #file, _ line: Int = #line, _ column: Int = #column) {
-        logger.fatal(string.makeSubject(), fromFramework: self)
+        logger.fatal(string.makeSubject(fromFramework: self), fromFramework: self)
     }
     
     public func error(_ string: String, _ function: String = #function, _ file: String = #file, _ line: Int = #line, _ column: Int = #column) {
-        logger.error(string.makeSubject(), fromFramework: self)
+        logger.error(string.makeSubject(fromFramework: self), fromFramework: self)
     }
     
     public func warning(_ string: String, _ function: String = #function, _ file: String = #file, _ line: Int = #line, _ column: Int = #column) {
-        logger.warning(string.makeSubject(), fromFramework: self)
+        logger.warning(string.makeSubject(fromFramework: self), fromFramework: self)
     }
     
     public func info(_ string: String, _ function: String = #function, _ file: String = #file, _ line: Int = #line, _ column: Int = #column) {
-        logger.info(string.makeSubject(), fromFramework: self)
+        logger.info(string.makeSubject(fromFramework: self), fromFramework: self)
     }
     
     public func debug(_ string: String, _ function: String = #function, _ file: String = #file, _ line: Int = #line, _ column: Int = #column) {
-        logger.debug(string.makeSubject(), fromFramework: self)
+        logger.debug(string.makeSubject(fromFramework: self), fromFramework: self)
     }
     
     public func verbose(_ string: String, _ function: String = #function, _ file: String = #file, _ line: Int = #line, _ column: Int = #column) {
-        logger.verbose(string.makeSubject(), fromFramework: self)
+        logger.verbose(string.makeSubject(fromFramework: self), fromFramework: self)
     }
     
     // MARK: Subject
     
     public func fatal(_ subject: SubjectRepresentable, _ function: String = #function, _ file: String = #file, _ line: Int = #line, _ column: Int = #column) {
-        logger.fatal(subject.makeSubject(), fromFramework: self, function, file, line, column)
+        logger.fatal(subject.makeSubject(fromFramework: self), fromFramework: self, function, file, line, column)
     }
     
     public func error(_ subject: SubjectRepresentable, _ function: String = #function, _ file: String = #file, _ line: Int = #line, _ column: Int = #column) {
-        logger.error(subject.makeSubject(), fromFramework: self, function, file, line, column)
+        logger.error(subject.makeSubject(fromFramework: self), fromFramework: self, function, file, line, column)
     }
     
     public func warning(_ subject: SubjectRepresentable, _ function: String = #function, _ file: String = #file, _ line: Int = #line, _ column: Int = #column) {
-        logger.warning(subject.makeSubject(), fromFramework: self, function, file, line, column)
+        logger.warning(subject.makeSubject(fromFramework: self), fromFramework: self, function, file, line, column)
     }
     
     public func info(_ subject: SubjectRepresentable, _ function: String = #function, _ file: String = #file, _ line: Int = #line, _ column: Int = #column) {
-        logger.info(subject.makeSubject(), fromFramework: self, function, file, line, column)
+        logger.info(subject.makeSubject(fromFramework: self), fromFramework: self, function, file, line, column)
     }
     
     public func debug(_ subject: SubjectRepresentable, _ function: String = #function, _ file: String = #file, _ line: Int = #line, _ column: Int = #column) {
-        logger.debug(subject.makeSubject(), fromFramework: self, function, file, line, column)
+        logger.debug(subject.makeSubject(fromFramework: self), fromFramework: self, function, file, line, column)
     }
     
     public func verbose(_ subject: SubjectRepresentable, _ function: String = #function, _ file: String = #file, _ line: Int = #line, _ column: Int = #column) {
-        logger.verbose(subject.makeSubject(), fromFramework: self, function, file, line, column)
+        logger.verbose(subject.makeSubject(fromFramework: self), fromFramework: self, function, file, line, column)
     }
 }
 

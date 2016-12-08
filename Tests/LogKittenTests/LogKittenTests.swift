@@ -4,15 +4,15 @@ import LogKitten
 class LogKittenTests: XCTestCase {
     
     func logSamples(using log: _Logger) {
-        log.verbose("Sample verbose log message")
-        log.debug("Sample debug log message")
-        log.info("Kittens are adorable")
-        log.success("Sample success log message")
-        log.warning("Sample warning log message")
-        log.error("Sample error log message")
-        log.fatal("Sample fatal log message")
-        log.info("This is a cow: 🐮")
-        log.warning("This is percent s: %s")
+//        log.verbose("Sample verbose log message")
+//        log.debug("Sample debug log message")
+//        log.info("Kittens are adorable")
+//        log.success("Sample success log message")
+//        log.warning("Sample warning log message")
+//        log.error("Sample error log message")
+//        log.fatal("Sample fatal log message")
+//        log.info("This is a cow: 🐮")
+//        log.warning("This is percent s: %s")
     }
     
     func testVisual() {
