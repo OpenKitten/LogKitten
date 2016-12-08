@@ -33,16 +33,27 @@ public class ConfigurableRenderer : PlaintextRenderer {
         return dfm
     }()
     
-    let format = "%date [%level] %message    [%source:%filename:%function]"
+    let format = "%date [%level] %message    [%source:%filename:%function] %framework"
     
-    private func render(_ subject: Message.Subject) -> String {
+    private func render(_ subject: Subject, fromFramework framework: Framework) -> String {
         switch subject {
-        case .string(let text):
-            return text
+        case .string(let s): return s
+        case .attributedData(let type, _):
+            guard let frameworkId = framework.logKittenID else {
+                return "Unknown"
+            }
+            
+            guard let (_, type) = framework.logger.subjects[frameworkId]?.first(where: {
+                $0.0 == type
+            }) else {
+                return "Unknown"
+            }
+            
+            return type.name
         }
     }
     
-    public func render(_ message: Message) -> String {
+    public func render<L: Level>(_ message: Message<L>, fromFramework framework: Framework) -> String {
         let path = message.origin.filePath
         let filename = NSString(string: path).lastPathComponent
         
@@ -60,10 +71,11 @@ public class ConfigurableRenderer : PlaintextRenderer {
             "%function": message.origin.function,
             "%line": "\(message.origin.line)",
             "%column": "\(message.origin.column)",
-            "%message": render(message.subject),
+            "%message": render(message.subject, fromFramework: framework),
             "%level": message.level.description,
             "%source": message.source,
-            "%date": dateFormatter.string(from: message.date)
+            "%date": dateFormatter.string(from: message.date),
+            "%framework": framework.name
         ]
         
         var finalMessage = self.format

@@ -29,26 +29,20 @@ public enum AnsiColor : String {
     case reset = "\u{1b}[0m"
 }
 
+public protocol AnsiColorRepresentable {
+    var ansiColor: AnsiColor { get }
+}
+
 public class Colorizer : PlaintextTransformer {
     
     public init() {}
     
-    public var colors: [Level : AnsiColor] = [
-        .verbose: .darkGray,
-        .debug: .purple,
-        .info: .cyan,
-        .success: .green,
-        .warning: .yellow,
-        .error: .red,
-        .fatal: .lightRed
-    ]
-    
-    public func transform(_ input: String, context: Message) -> String {
-        guard let color = colors[context.level] else {
-            return input
+    public func transform<L: Level>(_ input: String, context: Message<L>, fromFramework: Framework) -> String {
+        if let level = context.level as? AnsiColorRepresentable {
+            return level.ansiColor.rawValue + input + AnsiColor.reset.rawValue
         }
         
-        return color.rawValue + input + AnsiColor.reset.rawValue
+        return input
     }
     
 }
