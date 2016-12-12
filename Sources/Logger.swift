@@ -43,9 +43,32 @@ public class Logger : _Logger {
     
     public private(set) var frameworks = [(UInt8, Framework)]()
     public private(set) var subjects = [UInt8: [(UInt8, SubjectRepresentable.Type)]]()
+    private let lock = NSLock()
+    
+    public func unregister(_ framework: Framework) {
+        guard let id = framework.logKittenID else {
+            return
+        }
+        
+        lock.lock()
+        defer { lock.unlock() }
+        
+        frameworks = frameworks.flatMap { f in
+            return f.0 == id ? nil : f
+        }
+    }
     
     public func registerFramework(_ framework: Framework) {
-        let id: UInt8 = self.frameworks.last?.0 ?? 0
+        let id: UInt8
+        
+        lock.lock()
+        defer { lock.unlock() }
+        
+        if let lastId = self.frameworks.last?.0 {
+            id = lastId + 1
+        } else {
+            id = 0
+        }
         
         frameworks.append((id, framework))
         
