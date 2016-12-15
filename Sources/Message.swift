@@ -2,7 +2,7 @@ import Foundation
 
 public enum Subject {
     case string(String)
-    case attributedData(type: UInt8, data: [UInt8])
+    case attributedData(type: SubjectRepresentable.Type, data: [UInt8])
 }
 
 public struct Message<L: Level> {

@@ -37,7 +37,7 @@ public class Colorizer : PlaintextTransformer {
     
     public init() {}
     
-    public func transform<L: Level>(_ input: String, context: Message<L>, fromFramework: Framework) -> String {
+    public func transform<L: Level>(_ input: String, context: Message<L>, fromFramework: String) -> String {
         if let level = context.level as? AnsiColorRepresentable {
             return level.ansiColor.rawValue + input + AnsiColor.reset.rawValue
         }

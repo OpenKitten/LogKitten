@@ -35,16 +35,12 @@ public class ConfigurableRenderer : PlaintextRenderer {
     
     let format = "%date [%level] %message    [%source:%filename:%function] %framework"
     
-    private func render(_ subject: Subject, fromFramework framework: Framework) -> String {
+    private func render(_ subject: Subject, fromFramework framework: String) -> String {
         switch subject {
         case .string(let s): return s
         case .attributedData(let type, let data):
-            guard let frameworkId = framework.logKittenID else {
-                return "Unknown"
-            }
-            
-            guard let (_, type) = framework.logger.subjects[frameworkId]?.first(where: {
-                $0.0 == type
+            guard let type = Logger.default.subjects[framework]?.first(where: {
+                $0 == type
             }) else {
                 return "Unknown"
             }
@@ -53,7 +49,7 @@ public class ConfigurableRenderer : PlaintextRenderer {
         }
     }
     
-    public func render<L: Level>(_ message: Message<L>, fromFramework framework: Framework) -> String {
+    public func render<L: Level>(_ message: Message<L>, fromFramework framework: String) -> String {
         let path = message.origin.filePath
         let filename = NSString(string: path).lastPathComponent
         
@@ -75,7 +71,7 @@ public class ConfigurableRenderer : PlaintextRenderer {
             "%level": message.level.description,
             "%source": message.source,
             "%date": dateFormatter.string(from: message.date),
-            "%framework": framework.name
+            "%framework": framework
         ]
         
         var finalMessage = self.format

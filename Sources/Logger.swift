@@ -12,27 +12,46 @@ public enum LogKittenError: Error {
     case noRegisteredFrameworkFound
 }
 
-public class Logger : _Logger {
-    public init(minimumLogLevel: Int) {
-        self.minimumLevel = minimumLogLevel
-        
-        if Logger.componentLogger == nil {
-            self.useForComponents = true
-        }
+public class FrameworkLogger {
+    public func log<L : Level>(_ message: Message<L>) {
+        logger.log(message, fromFramework: framework)
+    }
+
+    let logger: Logger
+    let framework: String
+    
+    init(toLogger logger: Logger, withIdentifier frameworkIdentifier: String) {
+        self.logger = logger
+        self.framework = frameworkIdentifier
     }
     
+    @discardableResult
+    public func registerSubject(_ subject: SubjectRepresentable.Type) throws {
+        if logger.subjects[framework] != nil {
+            logger.subjects[framework]!.append(subject)
+        } else {
+            logger.subjects[framework] = [subject]
+        }
+    }
+}
+
+public class Logger {
     public init(minimumLogLevel: DefaultLevel = .info) {
-        self.minimumLevel = minimumLogLevel.compareValue
+        self.minimumLogLevel = minimumLogLevel.compareValue
         
         if Logger.componentLogger == nil {
             self.useForComponents = true
         }
     }
     
-    var minimumLevel: Int
+    public static func forFramework(withIdentifier frameworkIdentifier: String) -> FrameworkLogger {
+        return FrameworkLogger(toLogger: Logger.default, withIdentifier: frameworkIdentifier)
+    }
     
-    public func log<L : Level>(_ message: Message<L>, fromFramework framework: Framework) {
-        guard message.level.compareValue >= minimumLevel else {
+    public var minimumLogLevel: Int
+    
+    public func log<L : Level>(_ message: Message<L>, fromFramework framework: String) {
+        guard message.level.compareValue >= minimumLogLevel else {
             return
         }
         
@@ -41,55 +60,8 @@ public class Logger : _Logger {
         }
     }
     
-    public private(set) var frameworks = [(UInt8, Framework)]()
-    public private(set) var subjects = [UInt8: [(UInt8, SubjectRepresentable.Type)]]()
+    var subjects = [String: [SubjectRepresentable.Type]]()
     private let lock = NSLock()
-    
-    public func unregister(_ framework: Framework) {
-        guard let id = framework.logKittenID else {
-            return
-        }
-        
-        lock.lock()
-        defer { lock.unlock() }
-        
-        frameworks = frameworks.flatMap { f in
-            return f.0 == id ? nil : f
-        }
-    }
-    
-    public func registerFramework(_ framework: Framework) {
-        let id: UInt8
-        
-        lock.lock()
-        defer { lock.unlock() }
-        
-        if let lastId = self.frameworks.last?.0 {
-            id = lastId + 1
-        } else {
-            id = 0
-        }
-        
-        frameworks.append((id, framework))
-        
-        framework.logKittenID = id
-    }
-    
-    @discardableResult
-    public func registerSubject(_ subject: SubjectRepresentable.Type, forFramework framework: Framework) throws -> UInt8 {
-        guard let id = framework.logKittenID else {
-            throw LogKittenError.noRegisteredFrameworkFound
-        }
-        
-        var subjects = self.subjects[id] ?? []
-        let subjectId: UInt8 = subjects.last?.0 ?? 0
-        
-        // Add the subject
-        subjects.append((subjectId, subject))
-        self.subjects[id] = subjects
-        
-        return subjectId
-    }
     
     public static let `default` = Logger()
     
@@ -103,9 +75,4 @@ public class Logger : _Logger {
         get { return self === Logger.componentLogger }
         set { Logger.componentLogger = self }
     }
-    
-    public class func logger(forComponent identifier: String) -> _Logger {
-        fatalError()
-    }
-    
 }
